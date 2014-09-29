@@ -12,17 +12,21 @@ function SVGClass(ref) {
 }
 
 
+function drawCircle(cx, cy, radius, fill_color) {
+  var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  shape.setAttributeNS(null, "cx", cx);
+  shape.setAttributeNS(null, "cy", cy);
+  shape.setAttributeNS(null, "r", radius);
+  shape.setAttributeNS(null, "fill", fill_color);
+  document.getElementById('hierarchy').appendChild(shape);
+}
+
 function drawCurrentObject(svg) {
 
 }
 
 function drawParents(svg, nb_parents) {
-  var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  shape.setAttributeNS(null, "cx", svg.x_centre);
-  shape.setAttributeNS(null, "cy", svg.y_centre);
-  shape.setAttributeNS(null, "r", svg.cote_min/2);
-  shape.setAttributeNS(null, "fill", "green");
-  document.getElementById('hierarchy').appendChild(shape);
+  drawCircle(svg.x_centre, svg.y_centre, svg.cote_min/2, "green");
 }
 
 function drawSiblings(svg, nb_siblings) {
@@ -41,8 +45,8 @@ $(document).ready(function() {
 
   var svg = new SVGClass($("#hierarchy"));
 
-  //drawCurrentObject(svg);
+  drawCurrentObject(svg);
   drawParents(svg, nb_parents);
-  // drawSiblings(svg, nb_siblings);
-  // drawChildren(svg, nb_children);
+  drawSiblings(svg, nb_siblings);
+  drawChildren(svg, nb_children);
 });
