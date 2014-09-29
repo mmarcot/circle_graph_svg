@@ -1,3 +1,15 @@
+/**
+ * Definition d'une classe javascript représentant un canvas SVG
+ * @param {JQueryObject} ref Référence à l'objet jquery
+ */
+function SVGClass(ref) {
+  this.ref = ref;
+  this.width = this.ref.attr("width");
+  this.height = this.ref.attr("height");
+  this.cote_min = Math.min(this.width, this.height);
+  this.x_centre = this.width / 2;
+  this.y_centre = this.height / 2;
+}
 
 
 function drawCurrentObject(svg) {
@@ -6,10 +18,9 @@ function drawCurrentObject(svg) {
 
 function drawParents(svg, nb_parents) {
   var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  var min_size = Math.min(svg.width, svg.height);
-  shape.setAttributeNS(null, "cx", min_size/2);
-  shape.setAttributeNS(null, "cy", min_size/2);
-  shape.setAttributeNS(null, "r", min_size/2);
+  shape.setAttributeNS(null, "cx", svg.x_centre);
+  shape.setAttributeNS(null, "cy", svg.y_centre);
+  shape.setAttributeNS(null, "r", svg.cote_min/2);
   shape.setAttributeNS(null, "fill", "green");
   document.getElementById('hierarchy').appendChild(shape);
 }
@@ -28,10 +39,7 @@ $(document).ready(function() {
   var nb_siblings = parseInt($("#siblings").html());
   var nb_children = parseInt($("#children").html());
 
-  var svg = {
-    width : $("#hierarchy").attr("width"),
-    height : $("#hierarchy").attr("height")
-  };
+  var svg = new SVGClass($("#hierarchy"));
 
   //drawCurrentObject(svg);
   drawParents(svg, nb_parents);
