@@ -5,7 +5,13 @@ function drawCurrentObject(svg) {
 }
 
 function drawParents(svg, nb_parents) {
-  svg.html("<circle cx='50' cy='50' r='40' stroke='black' stroke-width='3' fill='red' />");
+  var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  var min_size = Math.min(svg.width, svg.height);
+  shape.setAttributeNS(null, "cx", min_size/2);
+  shape.setAttributeNS(null, "cy", min_size/2);
+  shape.setAttributeNS(null, "r", min_size/2);
+  shape.setAttributeNS(null, "fill", "green");
+  document.getElementById('hierarchy').appendChild(shape);
 }
 
 function drawSiblings(svg, nb_siblings) {
@@ -22,7 +28,10 @@ $(document).ready(function() {
   var nb_siblings = parseInt($("#siblings").html());
   var nb_children = parseInt($("#children").html());
 
-  var svg = $("#hierarchy");
+  var svg = {
+    width : $("#hierarchy").attr("width"),
+    height : $("#hierarchy").attr("height")
+  };
 
   //drawCurrentObject(svg);
   drawParents(svg, nb_parents);
