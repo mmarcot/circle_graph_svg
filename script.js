@@ -27,7 +27,7 @@ function Circle(xc, yc, radius) {
    * Est ce que le point passé en parametre est contenu dans le cercle ?
    * @param  {int} x     Abscisse du point à tester
    * @param  {int} y     Ordonnée du point à tester
-   * @param  int} scale Permet de mettre à l'echelle le rayon en retranchant ou ajoutant une somme
+   * @param  int} scale  Permet de mettre à l'echelle le rayon en retranchant ou ajoutant une somme
    * @return {boolean}       Vrai ou faux
    */
   this.contains = function(x, y, scale) {
@@ -96,12 +96,11 @@ function drawParents(svg, nb_parents) {
  * @param  {Circle} current_object Le cercle représentant l'objet courant
  */
 function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
-  var rayon_siblings = 8;
-
   var placer = 0;
   while(placer < nb_siblings) {
     var x_random = Math.random() * svg.width;
     var y_random = Math.random()* svg.height;
+    var rayon_siblings = Math.random()*10 + 15;
 
     if(smaller_parent.contains(x_random, y_random, -rayon_siblings) &&
       !current_object.contains(x_random, y_random, +rayon_siblings) ) {
@@ -122,10 +121,11 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
  * @param  {circle} current_object Cercle représentant l'objet courant
  */
 function drawChildren(svg, nb_children, current_object) {
-  var rayon_children = 5;
 
   var placer = 0;
   while(placer < nb_children) {
+    var rayon_children = Math.random()*3 + 3;
+
     var x_random = Math.random() * (current_object.radius*2) + current_object.xc-current_object.radius;
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
 
@@ -144,7 +144,7 @@ $(document).ready(function() {
   // var nb_children = parseInt($("#children").html());
 
   var nb_parents = 3;
-  var nb_siblings = 500;
+  var nb_siblings = 50;
   var nb_children = 500;
 
   var svg = new SVGClass($("#hierarchy"));
