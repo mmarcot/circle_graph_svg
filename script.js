@@ -85,12 +85,15 @@ function drawParents(svg, nb_parents) {
 }
 
 
+/**
+ * Fonction qui s'occupe de déssiner les siblings
+ * @param  {SVGClass} svg            Le canvas svg
+ * @param  {int} nb_siblings    Le nombre de siblings à dessiner
+ * @param  {Circle} smaller_parent Le cercle représentant le plus petit des parents
+ * @param  {Circle} current_object Le cercle représentant l'objet courant
+ */
 function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
   var rayon_siblings = 5;
-  var rayon_sup = smaller_parent.rayon - rayon_siblings;
-  var rayon_inf = current_object.rayon + rayon_siblings;
-  var x_centre = current_object.x_centre;
-  var y_centre = current_object.y_centre;
 
   var placer = 0;
   while(placer < nb_siblings) {
@@ -104,12 +107,23 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
       drawCircle(x_random, y_random, rayon_siblings, "blue");
       placer++;
     }
-
   }
 }
 
-function drawChildren(svg, nb_children) {
+function drawChildren(svg, nb_children, current_object) {
+  var rayon_children = 5;
 
+  var placer = 0;
+  while(placer < nb_children) {
+    var x_random = Math.random() * (current_object.rayon*2) + current_object.x_centre-current_object.rayon;
+    var y_random = Math.random() * (current_object.rayon*2) + current_object.y_centre-current_object.rayon;
+
+    if(inCircle(current_object.x_centre, current_object.y_centre,
+        current_object.rayon-rayon_children, x_random, y_random) ) {
+      drawCircle(x_random, y_random, rayon_children, "red");
+      placer++;
+    }
+  }
 }
 
 
@@ -123,5 +137,5 @@ $(document).ready(function() {
   var current_object = drawCurrentObject(svg);
   var smaller_parent = drawParents(svg, nb_parents);
   drawSiblings(svg, nb_siblings, smaller_parent, current_object);
-  drawChildren(svg, nb_children);
+  drawChildren(svg, nb_children, current_object);
 });
