@@ -51,6 +51,16 @@ function Circle(xc, yc, radius) {
 }
 
 
+function isCollision(tab_s, x_random, y_random) {
+  for(var i=0; i<tab_s.length; i++) {
+    if(tab_s[i].contains(x_random, y_random, 0)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
 /**
  * Fonction qui déssine l'objet courant sous forme de cercle SVG
  * @param  {SVGClass} svg L'objet svg
@@ -92,8 +102,11 @@ function drawParents(svg, nb_parents) {
  * @param  {Circle} current_object Le cercle représentant l'objet courant
  */
 function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
+  var tab_s = [];
   var placer = 0;
-  while(placer < nb_siblings) {
+  var cpt_colli = 0;
+
+  while(placer < nb_siblings && cpt_colli < 10) {
     var x_random = Math.random() * svg.width;
     var y_random = Math.random()* svg.height;
     var rayon_siblings = Math.random()*10 + 15;
@@ -101,9 +114,15 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
     if(smaller_parent.contains(x_random, y_random, -rayon_siblings) &&
       !current_object.contains(x_random, y_random, +rayon_siblings) ) {
 
-      var sibling = new Circle(x_random, y_random, rayon_siblings);
-      sibling.draw("red");
-      placer++;
+      if( !isCollision(tab_s, x_random, y_random) ) {
+        var sibling = new Circle(x_random, y_random, rayon_siblings);
+        sibling.draw("red");
+        tab_s[tab_s.length] = sibling;
+        placer++;
+        cpt_colli = 0;
+      }
+      else
+        cpt_colli++;
     }
 
   }
@@ -118,17 +137,26 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
  * @param  {circle} current_object Cercle représentant l'objet courant
  */
 function drawChildren(svg, nb_children, current_object) {
+  var tab_c = [];
   var placer = 0;
-  while(placer < nb_children) {
-    var rayon_children = Math.random()*3 + 3;
+  var cpt_colli = 0;
 
+  while(placer < nb_children && cpt_colli < 10) {
     var x_random = Math.random() * (current_object.radius*2) + current_object.xc-current_object.radius;
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
+    var rayon_children = Math.random()*3 + 3;
 
     if(current_object.contains(x_random, y_random, -rayon_children) ) {
-      var child = new Circle(x_random, y_random, rayon_children);
-      child.draw("blue");
-      placer++;
+
+      if( !isCollision(tab_c, x_random, y_random) ) {
+        var child = new Circle(x_random, y_random, rayon_children);
+        child.draw("blue");
+        tab_c[tab_c.length] = child;
+        placer++;
+        cpt_colli = 0;
+      }
+      else
+        cpt_colli++;
     }
   }
 }
@@ -140,8 +168,8 @@ $(document).ready(function() {
   // var nb_children = parseInt($("#children").html());
 
   var nb_parents = 3;
-  var nb_siblings = 50;
-  var nb_children = 500;
+  var nb_siblings = 50000;
+  var nb_children = 50000;
 
   var svg = new SVGClass($("#hierarchy"));
 
