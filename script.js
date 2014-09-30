@@ -22,7 +22,21 @@ function Circle(xc, yc, radius) {
   this.xc = xc;
   this.yc = yc;
   this.radius = radius;
+
+  /**
+   * Est ce que le point passé en parametre est contenu dans le cercle ?
+   * @param  {int} x     Abscisse du point à tester
+   * @param  {int} y     Ordonnée du point à tester
+   * @param  int} scale Permet de mettre à l'echelle le rayon en retranchant ou ajoutant une somme
+   * @return {boolean}       Vrai ou faux
+   */
+  this.contains = function(x, y, scale) {
+    var rad = this.radius + scale;
+    square_dist = Math.pow((this.xc - x), 2) + Math.pow((this.yc - y), 2);
+    return (square_dist <= Math.pow(rad, 2));
+  };
 }
+
 
 
 /**
@@ -41,20 +55,6 @@ function drawCircle(cx, cy, radius, fill_color) {
   document.getElementById('hierarchy').appendChild(shape);
 }
 
-
-/**
- * Fonction qui dit si un point est dans le cercle
- * @param  {int} center_x Centre x du cercle
- * @param  {int} center_y Centre y du cercle
- * @param  {int} radius   Rayon du cercle
- * @param  {int} x        Abscisse du point à tester
- * @param  {int} y        Ordonnée du point à tester
- * @return {boolean}          Vrai ou faux
- */
-function inCircle(center_x, center_y, radius, x, y) {
-  square_dist = Math.pow((center_x - x), 2) + Math.pow((center_y - y), 2);
-  return (square_dist <= Math.pow(radius, 2));
-}
 
 
 /**
@@ -103,10 +103,8 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
     var x_random = Math.random() * svg.width;
     var y_random = Math.random()* svg.height;
 
-    if(inCircle(smaller_parent.xc, smaller_parent.yc,
-        smaller_parent.radius-rayon_siblings, x_random, y_random) &&
-      !inCircle(current_object.xc, current_object.yc,
-        current_object.radius+rayon_siblings, x_random, y_random) ) {
+    if(smaller_parent.contains(x_random, y_random, -rayon_siblings) &&
+      !current_object.contains(x_random, y_random, +rayon_siblings) ) {
 
       drawCircle(x_random, y_random, rayon_siblings, "red");
       placer++;
@@ -131,15 +129,12 @@ function drawChildren(svg, nb_children, current_object) {
     var x_random = Math.random() * (current_object.radius*2) + current_object.xc-current_object.radius;
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
 
-    if(inCircle(current_object.xc, current_object.yc,
-        current_object.radius-rayon_children, x_random, y_random) ) {
-
+    if(current_object.contains(x_random, y_random, -rayon_children) ) {
       drawCircle(x_random, y_random, rayon_children, "blue");
       placer++;
     }
 
   }
-  alert(cpt);
 }
 
 
