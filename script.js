@@ -35,26 +35,20 @@ function Circle(xc, yc, radius) {
     square_dist = Math.pow((this.xc - x), 2) + Math.pow((this.yc - y), 2);
     return (square_dist <= Math.pow(rad, 2));
   };
+
+  /**
+   * Fonction qui permet de dessiner le cercle
+   * @param  {String} fill_color La couleur de remplissage
+   */
+  this.draw = function(fill_color) {
+    var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    shape.setAttributeNS(null, "cx", this.xc);
+    shape.setAttributeNS(null, "cy", this.yc);
+    shape.setAttributeNS(null, "r", this.radius);
+    shape.setAttributeNS(null, "fill", fill_color);
+    document.getElementById('hierarchy').appendChild(shape);
+  };
 }
-
-
-
-/**
- * Focntion qui déssine un cercle SVG
- * @param  {int} cx         x centre
- * @param  {int} cy         y centre
- * @param  {int} radius     rayon en px
- * @param  {colro} fill_color  La couleur
- */
-function drawCircle(cx, cy, radius, fill_color) {
-  var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  shape.setAttributeNS(null, "cx", cx);
-  shape.setAttributeNS(null, "cy", cy);
-  shape.setAttributeNS(null, "r", radius);
-  shape.setAttributeNS(null, "fill", fill_color);
-  document.getElementById('hierarchy').appendChild(shape);
-}
-
 
 
 /**
@@ -64,10 +58,11 @@ function drawCircle(cx, cy, radius, fill_color) {
  */
 function drawCurrentObject(svg) {
   var coef = 0.4;
+  var current_object = new Circle(svg.x_centre, svg.y_centre, (svg.cote_min/2)*coef);
 
-  drawCircle(svg.x_centre, svg.y_centre, (svg.cote_min/2)*coef, "red");
+  current_object.draw("red");
 
-  return new Circle(svg.x_centre, svg.y_centre, (svg.cote_min/2)*coef);
+  return current_object;
 }
 
 
@@ -81,7 +76,8 @@ function drawParents(svg, nb_parents) {
   var ecart = 3;
 
   for (var i = nb_parents; i > 0; i--) {
-    drawCircle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart, "green");
+    var parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart);
+    parent.draw("green");
   }
 
   return new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-nb_parents*ecart);
@@ -105,7 +101,8 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
     if(smaller_parent.contains(x_random, y_random, -rayon_siblings) &&
       !current_object.contains(x_random, y_random, +rayon_siblings) ) {
 
-      drawCircle(x_random, y_random, rayon_siblings, "red");
+      var sibling = new Circle(x_random, y_random, rayon_siblings);
+      sibling.draw("red");
       placer++;
     }
 
@@ -121,7 +118,6 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
  * @param  {circle} current_object Cercle représentant l'objet courant
  */
 function drawChildren(svg, nb_children, current_object) {
-
   var placer = 0;
   while(placer < nb_children) {
     var rayon_children = Math.random()*3 + 3;
@@ -130,10 +126,10 @@ function drawChildren(svg, nb_children, current_object) {
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
 
     if(current_object.contains(x_random, y_random, -rayon_children) ) {
-      drawCircle(x_random, y_random, rayon_children, "blue");
+      var child = new Circle(x_random, y_random, rayon_children);
+      child.draw("blue");
       placer++;
     }
-
   }
 }
 
