@@ -46,10 +46,20 @@ function inCircle(center_x, center_y, radius, x, y) {
 /**
  * Fonction qui déssine l'objet courant sous forme de cercle SVG
  * @param  {SVGClass} svg L'objet svg
+ * @return {Circle}   Les dimensions du cercle représentant l'objet courant
  */
 function drawCurrentObject(svg) {
   var coef = 0.4;
+
   drawCircle(svg.x_centre, svg.y_centre, (svg.cote_min/2)*coef, "red");
+
+  var current_object = {
+    x_centre : svg.x_centre,
+    y_centre : svg.y_centre,
+    rayon : (svg.cote_min/2)*coef
+  };
+
+  return current_object;
 }
 
 
@@ -57,28 +67,46 @@ function drawCurrentObject(svg) {
  * Fonction qui dessine les parents sous forme de cercle
  * @param  {SVGClass} svg        L'objet svg
  * @param  {int} nb_parents Le nombre de parent de l'objet courant
- * @return {Circle}   Le plus petit cercle de parents
+ * @return {Circle}   Le plus petit cercle des parents
  */
 function drawParents(svg, nb_parents) {
   var ecart = 3;
   var i;
-  for (i = 6; i > 0; i--) {
+  for (i = nb_parents; i > 0; i--) {
     drawCircle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart, "green");
   }
-  var last_circle = {
+  var smaller_parent = {
     x_centre : svg.x_centre,
     y_centre : svg.y_centre,
-    rayon : svg.cote_min/2-i*ecart
+    rayon : svg.cote_min/2-nb_parents*ecart
   };
 
-  return last_circle;
+  return smaller_parent;
 }
 
 
-function drawSiblings(svg, nb_siblings, smaller_parent) {
+function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
+  var rayon_siblings = 5;
+  var rayon_sup = smaller_parent.rayon - rayon_siblings;
+  var rayon_inf = current_object.rayon + rayon_siblings;
+  var x_centre = current_object.x_centre;
+  var y_centre = current_object.y_centre;
 
+  var placer = 0;
+  while(placer < nb_siblings) {
+    var x_random = Math.random() * svg.width;
+    var y_random = Math.random()* svg.height;
+
+    if(inCircle(smaller_parent.x_centre, smaller_parent.y_centre,
+        smaller_parent.rayon-rayon_siblings, x_random, y_random) &&
+      !inCircle(current_object.x_centre, current_object.y_centre,
+        current_object.rayon+rayon_siblings, x_random, y_random) ) {
+      drawCircle(x_random, y_random, rayon_siblings, "blue");
+      placer++;
+    }
+
+  }
 }
-
 
 function drawChildren(svg, nb_children) {
 
@@ -92,8 +120,8 @@ $(document).ready(function() {
 
   var svg = new SVGClass($("#hierarchy"));
 
-  drawCurrentObject(svg);
+  var current_object = drawCurrentObject(svg);
   var smaller_parent = drawParents(svg, nb_parents);
-  drawSiblings(svg, nb_siblings, smaller_parent);
+  drawSiblings(svg, nb_siblings, smaller_parent, current_object);
   drawChildren(svg, nb_children);
 });
