@@ -11,6 +11,7 @@ function SVGClass(ref) {
   this.y_centre = this.height / 2;
 }
 
+
 /**
  * Focntion qui déssine un cercle SVG
  * @param  {int} cx         x centre
@@ -93,7 +94,7 @@ function drawParents(svg, nb_parents) {
  * @param  {Circle} current_object Le cercle représentant l'objet courant
  */
 function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
-  var rayon_siblings = 5;
+  var rayon_siblings = 8;
 
   var placer = 0;
   while(placer < nb_siblings) {
@@ -104,12 +105,20 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
         smaller_parent.rayon-rayon_siblings, x_random, y_random) &&
       !inCircle(current_object.x_centre, current_object.y_centre,
         current_object.rayon+rayon_siblings, x_random, y_random) ) {
-      drawCircle(x_random, y_random, rayon_siblings, "blue");
+      drawCircle(x_random, y_random, rayon_siblings, "red");
       placer++;
     }
   }
 }
 
+
+/**
+ * Fonction qui s'occupe de dessiner les enfants de l'objet courant sous
+ * forme de cercles
+ * @param  {SVGClass} svg            Canvas SVG
+ * @param  {int} nb_children    Nombre d'enfants
+ * @param  {circle} current_object Cercle représentant l'objet courant
+ */
 function drawChildren(svg, nb_children, current_object) {
   var rayon_children = 5;
 
@@ -118,19 +127,27 @@ function drawChildren(svg, nb_children, current_object) {
     var x_random = Math.random() * (current_object.rayon*2) + current_object.x_centre-current_object.rayon;
     var y_random = Math.random() * (current_object.rayon*2) + current_object.y_centre-current_object.rayon;
 
+
     if(inCircle(current_object.x_centre, current_object.y_centre,
         current_object.rayon-rayon_children, x_random, y_random) ) {
-      drawCircle(x_random, y_random, rayon_children, "red");
+
+      drawCircle(x_random, y_random, rayon_children, "blue");
       placer++;
     }
+
   }
+  alert(cpt);
 }
 
 
 $(document).ready(function() {
-  var nb_parents = parseInt($("#parents").html());
-  var nb_siblings = parseInt($("#siblings").html());
-  var nb_children = parseInt($("#children").html());
+  // var nb_parents = parseInt($("#parents").html());
+  // var nb_siblings = parseInt($("#siblings").html());
+  // var nb_children = parseInt($("#children").html());
+
+  var nb_parents = 3;
+  var nb_siblings = 500;
+  var nb_children = 500;
 
   var svg = new SVGClass($("#hierarchy"));
 
