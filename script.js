@@ -29,6 +29,21 @@ function drawCircle(cx, cy, radius, fill_color) {
 
 
 /**
+ * Fonction qui dit si un point est dans le cercle
+ * @param  {int} center_x Centre x du cercle
+ * @param  {int} center_y Centre y du cercle
+ * @param  {int} radius   Rayon du cercle
+ * @param  {int} x        Abscisse du point à tester
+ * @param  {int} y        Ordonnée du point à tester
+ * @return {boolean}          Vrai ou faux
+ */
+function inCircle(center_x, center_y, radius, x, y) {
+  square_dist = Math.pow((center_x - x), 2) + Math.pow((center_y - y), 2);
+  return (square_dist <= Math.pow(radius, 2));
+}
+
+
+/**
  * Fonction qui déssine l'objet courant sous forme de cercle SVG
  * @param  {SVGClass} svg L'objet svg
  */
@@ -37,17 +52,30 @@ function drawCurrentObject(svg) {
   drawCircle(svg.x_centre, svg.y_centre, (svg.cote_min/2)*coef, "red");
 }
 
+
 /**
- * Fonction qui desiine les parents sous forme de cercle
+ * Fonction qui dessine les parents sous forme de cercle
  * @param  {SVGClass} svg        L'objet svg
  * @param  {int} nb_parents Le nombre de parent de l'objet courant
+ * @return {Circle}   Le plus petit cercle de parents
  */
 function drawParents(svg, nb_parents) {
-  drawCircle(svg.x_centre, svg.y_centre, svg.cote_min/2, "green");
+  var ecart = 3;
+  var i;
+  for (i = 6; i > 0; i--) {
+    drawCircle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart, "green");
+  }
+  var last_circle = {
+    x_centre : svg.x_centre,
+    y_centre : svg.y_centre,
+    rayon : svg.cote_min/2-i*ecart
+  };
+
+  return last_circle;
 }
 
 
-function drawSiblings(svg, nb_siblings) {
+function drawSiblings(svg, nb_siblings, smaller_parent) {
 
 }
 
@@ -65,7 +93,7 @@ $(document).ready(function() {
   var svg = new SVGClass($("#hierarchy"));
 
   drawCurrentObject(svg);
-  drawParents(svg, nb_parents);
-  drawSiblings(svg, nb_siblings);
+  var smaller_parent = drawParents(svg, nb_parents);
+  drawSiblings(svg, nb_siblings, smaller_parent);
   drawChildren(svg, nb_children);
 });
