@@ -12,6 +12,7 @@ function SVGClass(ref) {
 }
 
 
+
 /**
  * Definition d'une classe représentant un cercle
  * @param {int} xc     x du centre
@@ -47,24 +48,43 @@ function Circle(xc, yc, radius, hid) {
     if(this.hid === "parent")
       return "#A8D7FF";
     else if(this.hid === "sibling")
-      return "orange";
+      return "yellow";
     else if(this.hid === "children")
-      return "orange";
+      return "red";
     else if(this.hid === "current")
-      return "blue";
+      return "yellow";
   };
 
+  /**
+   * @return {float} The fill opacity
+   */
   this.getFillOpacity = function() {
-    return 0.25;
+    if(this.hid === "parent")
+      return 0.30;
+    else if(this.hid === "sibling")
+      return 0.40;
+    else if(this.hid === "children")
+      return 0.65;
+    else if(this.hid === "current")
+      return 0.5;
   };
 
+  /**
+   * @return {String} The stroke color
+   */
   this.getStrokeColor = function() {
     return "#000";
   };
 
+  /**
+   * @return {int} The stroke width
+   */
   this.getStrokeWidth = function() {
-    return 1;
-  }
+    if(this.hid === "current")
+      return 2;
+    else
+      return 1;
+  };
 
   /**
    * Fonction qui permet de dessiner le cercle
@@ -82,6 +102,11 @@ function Circle(xc, yc, radius, hid) {
     document.getElementById('hierarchy').appendChild(shape);
   };
 }
+
+
+
+
+
 
 
 
@@ -130,13 +155,14 @@ function drawCurrentObject(svg) {
  */
 function drawParents(svg, nb_parents) {
   var ecart = 3;
+  var parent;
 
-  for (var i = nb_parents; i > 0; i--) {
-    var parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart, "parent");
+  for (var i = 0; i < nb_parents; i++) {
+    parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart, "parent");
     parent.draw();
   }
 
-  return new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-nb_parents*ecart, "parent");
+  return parent;
 }
 
 
@@ -216,14 +242,14 @@ $(document).ready(function() {
   // var nb_siblings = parseInt($("#siblings").html());
   // var nb_children = parseInt($("#children").html());
 
-  var nb_parents = 3;
+  var nb_parents = 6;
   var nb_siblings = 10000;
   var nb_children = 10000;
 
   var svg = new SVGClass($("#hierarchy"));
 
-  var current_object = drawCurrentObject(svg);
   var smaller_parent = drawParents(svg, nb_parents);
+  var current_object = drawCurrentObject(svg);
   drawSiblings(svg, nb_siblings, smaller_parent, current_object);
   drawChildren(svg, nb_children, current_object);
 });
