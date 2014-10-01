@@ -17,11 +17,13 @@ function SVGClass(ref) {
  * @param {int} xc     x du centre
  * @param {int} yc     y du centre
  * @param {int} radius Rayon du cercle
+ * @param {int} hid  parent; sibling; children; current
  */
-function Circle(xc, yc, radius) {
+function Circle(xc, yc, radius, hid) {
   this.xc = xc;
   this.yc = yc;
   this.radius = radius;
+  this.hid = hid;
 
   /**
    * Est ce que le point passé en parametre est contenu dans le cercle ?
@@ -37,6 +39,34 @@ function Circle(xc, yc, radius) {
   };
 
   /**
+   * Fonction qui gère la couleur des cercles en fonction de leur grade
+   * hieratchique
+   * @return {String} La couleur
+   */
+  this.getFillcolor = function() {
+    if(this.hid === "parent")
+      return "#A8D7FF";
+    else if(this.hid === "sibling")
+      return "orange";
+    else if(this.hid === "children")
+      return "orange";
+    else if(this.hid === "current")
+      return "blue";
+  };
+
+  this.getFillOpacity = function() {
+    return 0.25;
+  };
+
+  this.getStrokeColor = function() {
+    return "#000";
+  };
+
+  this.getStrokeWidth = function() {
+    return 1;
+  }
+
+  /**
    * Fonction qui permet de dessiner le cercle
    * @param  {String} fill_color La couleur de remplissage
    */
@@ -45,7 +75,10 @@ function Circle(xc, yc, radius) {
     shape.setAttributeNS(null, "cx", this.xc);
     shape.setAttributeNS(null, "cy", this.yc);
     shape.setAttributeNS(null, "r", this.radius);
-    shape.setAttributeNS(null, "fill", fill_color);
+    shape.setAttributeNS(null, "fill", this.getFillcolor());
+    shape.setAttributeNS(null, "fill-opacity", this.getFillOpacity());
+    shape.setAttributeNS(null, "stroke", this.getStrokeColor());
+    shape.setAttributeNS(null, "stroke-width", this.getStrokeWidth());
     document.getElementById('hierarchy').appendChild(shape);
   };
 }
@@ -80,9 +113,9 @@ function isCollision(tab, x_random, y_random, rayon) {
  */
 function drawCurrentObject(svg) {
   var coef = 0.4;
-  var current_object = new Circle(svg.x_centre, svg.y_centre, (svg.cote_min/2)*coef);
+  var current_object = new Circle(svg.x_centre, svg.y_centre, (svg.cote_min/2)*coef, "current");
 
-  current_object.draw("red");
+  current_object.draw();
 
   return current_object;
 }
@@ -99,11 +132,11 @@ function drawParents(svg, nb_parents) {
   var ecart = 3;
 
   for (var i = nb_parents; i > 0; i--) {
-    var parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart);
-    parent.draw("green");
+    var parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart, "parent");
+    parent.draw();
   }
 
-  return new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-nb_parents*ecart);
+  return new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-nb_parents*ecart, "parent");
 }
 
 
@@ -120,17 +153,17 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
   var placer = 0;
   var cpt_colli = 0;
 
-  while(placer < nb_siblings && cpt_colli < 25) {
+  while(placer < nb_siblings && cpt_colli < 70) {
     var x_random = Math.random() * svg.width;
     var y_random = Math.random()* svg.height;
-    var rayon_siblings = Math.random()*10 + 20;
+    var rayon_siblings = Math.random()*10 + 15;
 
     if(smaller_parent.contains(x_random, y_random, -rayon_siblings) &&
       !current_object.contains(x_random, y_random, +rayon_siblings) ) {
 
       if( !isCollision(tab_s, x_random, y_random, rayon_siblings) ) {
-        var sibling = new Circle(x_random, y_random, rayon_siblings);
-        sibling.draw("red");
+        var sibling = new Circle(x_random, y_random, rayon_siblings, "sibling");
+        sibling.draw();
         tab_s[tab_s.length] = sibling;
         placer++;
         cpt_colli = 0;
@@ -156,7 +189,7 @@ function drawChildren(svg, nb_children, current_object) {
   var placer = 0;
   var cpt_colli = 0;
 
-  while(placer < nb_children && cpt_colli < 8) {
+  while(placer < nb_children && cpt_colli < 50) {
     var x_random = Math.random() * (current_object.radius*2) + current_object.xc-current_object.radius;
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
     var rayon_children = Math.random()*3 + 3;
@@ -164,8 +197,8 @@ function drawChildren(svg, nb_children, current_object) {
     if(current_object.contains(x_random, y_random, -rayon_children) ) {
 
       if( !isCollision(tab_c, x_random, y_random, rayon_children) ) {
-        var child = new Circle(x_random, y_random, rayon_children);
-        child.draw("blue");
+        var child = new Circle(x_random, y_random, rayon_children, "children");
+        child.draw();
         tab_c[tab_c.length] = child;
         placer++;
         cpt_colli = 0;
@@ -184,8 +217,8 @@ $(document).ready(function() {
   // var nb_children = parseInt($("#children").html());
 
   var nb_parents = 3;
-  var nb_siblings = 50;
-  var nb_children = 100;
+  var nb_siblings = 10000;
+  var nb_children = 10000;
 
   var svg = new SVGClass($("#hierarchy"));
 
