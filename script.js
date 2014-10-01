@@ -51,14 +51,26 @@ function Circle(xc, yc, radius) {
 }
 
 
-function isCollision(tab_s, x_random, y_random) {
-  for(var i=0; i<tab_s.length; i++) {
-    if(tab_s[i].contains(x_random, y_random, 0)) {
+
+/**
+ * Fonction qui dit si il ya a collision
+ * @param  {Array}  tab    Tableau contenant l'ensemble des cercles
+ * @param  {int}  x_random Abscisse à tester
+ * @param  {int}  y_random Ordonnée à tester
+ * @param  {int}  rayon    Le rayon en px du cercle à tester
+ * @return {Boolean}          Vrai si collision, faux sinon
+ */
+function isCollision(tab, x_random, y_random, rayon) {
+  for(var i=0; i<tab.length; i++) {
+    var AB = Math.abs(tab[i].yc - y_random);
+    var BC = Math.abs(tab[i].xc - x_random);
+    var AC = Math.sqrt(AB*AB + BC*BC);
+    if(AC < tab[i].radius + rayon)
       return true;
-    }
   }
   return false;
 }
+
 
 
 /**
@@ -74,6 +86,7 @@ function drawCurrentObject(svg) {
 
   return current_object;
 }
+
 
 
 /**
@@ -94,6 +107,7 @@ function drawParents(svg, nb_parents) {
 }
 
 
+
 /**
  * Fonction qui s'occupe de déssiner les siblings
  * @param  {SVGClass} svg            Le canvas svg
@@ -106,15 +120,15 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
   var placer = 0;
   var cpt_colli = 0;
 
-  while(placer < nb_siblings && cpt_colli < 10) {
+  while(placer < nb_siblings && cpt_colli < 25) {
     var x_random = Math.random() * svg.width;
     var y_random = Math.random()* svg.height;
-    var rayon_siblings = Math.random()*10 + 15;
+    var rayon_siblings = Math.random()*10 + 20;
 
     if(smaller_parent.contains(x_random, y_random, -rayon_siblings) &&
       !current_object.contains(x_random, y_random, +rayon_siblings) ) {
 
-      if( !isCollision(tab_s, x_random, y_random) ) {
+      if( !isCollision(tab_s, x_random, y_random, rayon_siblings) ) {
         var sibling = new Circle(x_random, y_random, rayon_siblings);
         sibling.draw("red");
         tab_s[tab_s.length] = sibling;
@@ -129,6 +143,7 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
 }
 
 
+
 /**
  * Fonction qui s'occupe de dessiner les enfants de l'objet courant sous
  * forme de cercles
@@ -141,14 +156,14 @@ function drawChildren(svg, nb_children, current_object) {
   var placer = 0;
   var cpt_colli = 0;
 
-  while(placer < nb_children && cpt_colli < 10) {
+  while(placer < nb_children && cpt_colli < 8) {
     var x_random = Math.random() * (current_object.radius*2) + current_object.xc-current_object.radius;
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
     var rayon_children = Math.random()*3 + 3;
 
     if(current_object.contains(x_random, y_random, -rayon_children) ) {
 
-      if( !isCollision(tab_c, x_random, y_random) ) {
+      if( !isCollision(tab_c, x_random, y_random, rayon_children) ) {
         var child = new Circle(x_random, y_random, rayon_children);
         child.draw("blue");
         tab_c[tab_c.length] = child;
@@ -162,14 +177,15 @@ function drawChildren(svg, nb_children, current_object) {
 }
 
 
+
 $(document).ready(function() {
   // var nb_parents = parseInt($("#parents").html());
   // var nb_siblings = parseInt($("#siblings").html());
   // var nb_children = parseInt($("#children").html());
 
   var nb_parents = 3;
-  var nb_siblings = 50000;
-  var nb_children = 50000;
+  var nb_siblings = 50;
+  var nb_children = 100;
 
   var svg = new SVGClass($("#hierarchy"));
 
