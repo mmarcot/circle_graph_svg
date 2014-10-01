@@ -87,6 +87,16 @@ function Circle(xc, yc, radius, hid) {
   };
 
   /**
+   * @return {int} The stroke opacity
+   */
+  this.getStrokeOpacity = function() {
+    if(this.hid === "parent")
+      return 0.6;
+    else
+      return 1;
+  };
+
+  /**
    * Fonction qui permet de dessiner le cercle
    * @param  {String} fill_color La couleur de remplissage
    */
@@ -99,6 +109,7 @@ function Circle(xc, yc, radius, hid) {
     shape.setAttributeNS(null, "fill-opacity", this.getFillOpacity());
     shape.setAttributeNS(null, "stroke", this.getStrokeColor());
     shape.setAttributeNS(null, "stroke-width", this.getStrokeWidth());
+    shape.setAttributeNS(null, "stroke-opacity", this.getStrokeOpacity());
     document.getElementById('hierarchy').appendChild(shape);
   };
 }
