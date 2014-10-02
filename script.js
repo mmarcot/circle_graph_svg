@@ -46,13 +46,13 @@ function Circle(xc, yc, radius, hid) {
    */
   this.getFillcolor = function() {
     if(this.hid === "parent")
-      return "#C6E5FF";
+      return "#8EC3CC";
     else if(this.hid === "sibling")
-      return "#DDEF99";
+      return "#F0F27F";
     else if(this.hid === "children")
-      return "#F5542C";
+      return "#8D6290";
     else if(this.hid === "current")
-      return "#E3F27F";
+      return "#E4E540";
   };
 
   /**
