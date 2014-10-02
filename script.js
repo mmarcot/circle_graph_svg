@@ -91,6 +91,8 @@ function Circle(xc, yc, radius, hid) {
    * @param  {String} fill_color La couleur de remplissage
    */
   this.draw = function(fill_color) {
+    var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+    title.textContent = this.hid;
     var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     shape.setAttributeNS(null, "cx", this.xc);
     shape.setAttributeNS(null, "cy", this.yc);
@@ -100,6 +102,7 @@ function Circle(xc, yc, radius, hid) {
     shape.setAttributeNS(null, "stroke", this.getStrokeColor());
     shape.setAttributeNS(null, "stroke-width", this.getStrokeWidth());
     shape.setAttributeNS(null, "stroke-opacity", this.getStrokeOpacity());
+    shape.appendChild(title);
     document.getElementById('hierarchy').appendChild(shape);
   };
 }
