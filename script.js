@@ -87,12 +87,25 @@ function Circle(xc, yc, radius, hid) {
   };
 
   /**
-   * Fonction qui permet de dessiner le cercle
-   * @param  {String} fill_color La couleur de remplissage
+   * @return {string} The tooltip text
    */
-  this.draw = function(fill_color) {
+  this.getTooltipText = function() {
+    if(this.hid === "parent")
+      return "One of " + nb_parents + " parents";
+    else if(this.hid === "sibling")
+      return "One of " + nb_siblings + " siblings";
+    else if(this.hid === "children")
+      return "One of " + nb_children + " children";
+    else if(this.hid === "current")
+      return "The current object";
+  };
+
+  /**
+   * Fonction qui permet de dessiner le cercle
+   */
+  this.draw = function() {
     var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-    title.textContent = this.hid;
+    title.textContent = this.getTooltipText();
     var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     shape.setAttributeNS(null, "cx", this.xc);
     shape.setAttributeNS(null, "cy", this.yc);
@@ -297,9 +310,9 @@ $(document).ready(function() {
   // var nb_siblings = parseInt($("#siblings").html());
   // var nb_children = parseInt($("#children").html());
 
-  var nb_parents = 3;
-  var nb_siblings = 9;
-  var nb_children = 9;
+  nb_parents = 3;
+  nb_siblings = 9;
+  nb_children = 9;
 
   var svg = new SVGClass($("#hierarchy"));
 
