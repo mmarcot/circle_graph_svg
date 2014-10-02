@@ -6,3 +6,6 @@ svg {
   background-color: white;
 }
 
+circle:hover {
+  stroke: #000;
+}

@@ -73,16 +73,13 @@ function Circle(xc, yc, radius, hid) {
    * @return {String} The stroke color
    */
   this.getStrokeColor = function() {
-    return "#000";
+    return "gray";
   };
 
   /**
    * @return {int} The stroke width
    */
   this.getStrokeWidth = function() {
-    if(this.hid === "current")
-      return 2;
-    else
       return 1;
   };
 
@@ -305,8 +302,8 @@ $(document).ready(function() {
   // var nb_children = parseInt($("#children").html());
 
   var nb_parents = 3;
-  var nb_siblings = 102;
-  var nb_children = 5505;
+  var nb_siblings = 9;
+  var nb_children = 50;
 
   var svg = new SVGClass($("#hierarchy"));
 
