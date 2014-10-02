@@ -46,27 +46,20 @@ function Circle(xc, yc, radius, hid) {
    */
   this.getFillcolor = function() {
     if(this.hid === "parent")
-      return "#A8D7FF";
+      return "#C6E5FF";
     else if(this.hid === "sibling")
-      return "yellow";
+      return "#DDEF99";
     else if(this.hid === "children")
-      return "red";
+      return "#F5542C";
     else if(this.hid === "current")
-      return "yellow";
+      return "#E3F27F";
   };
 
   /**
    * @return {float} The fill opacity
    */
   this.getFillOpacity = function() {
-    if(this.hid === "parent")
-      return 0.30;
-    else if(this.hid === "sibling")
-      return 0.40;
-    else if(this.hid === "children")
-      return 0.65;
-    else if(this.hid === "current")
-      return 0.5;
+    return 1;
   };
 
   /**
@@ -303,7 +296,7 @@ $(document).ready(function() {
 
   var nb_parents = 3;
   var nb_siblings = 9;
-  var nb_children = 50;
+  var nb_children = 9;
 
   var svg = new SVGClass($("#hierarchy"));
 
