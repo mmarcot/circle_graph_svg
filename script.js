@@ -306,9 +306,9 @@ function drawChildren(svg, nb_children, current_object) {
 
 
 $(document).ready(function() {
-  // var nb_parents = parseInt($("#parents").html());
-  // var nb_siblings = parseInt($("#siblings").html());
-  // var nb_children = parseInt($("#children").html());
+  // nb_parents = parseInt($("#parents").html());
+  // nb_siblings = parseInt($("#siblings").html());
+  // nb_children = parseInt($("#children").html());
 
   nb_parents = 3;
   nb_siblings = 9;
