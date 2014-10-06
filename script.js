@@ -203,6 +203,7 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
     var x_random = Math.random() * svg.width;
     var y_random = Math.random()* svg.height;
     var rayon_siblings = 6 + scaleCircleSize(nb_siblings, "sibling");
+    rayon_siblings *= Math.min(svg.width, svg.height)/500;
 
     if(smaller_parent.contains(x_random, y_random, -rayon_siblings) &&
       !current_object.contains(x_random, y_random, +rayon_siblings) ) {
@@ -287,6 +288,7 @@ function drawChildren(svg, nb_children, current_object) {
     var x_random = Math.random() * (current_object.radius*2) + current_object.xc-current_object.radius;
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
     var rayon_children = 3 + scaleCircleSize(nb_children, "children");
+    rayon_children *= Math.min(svg.width, svg.height)/500;
 
     if(current_object.contains(x_random, y_random, -rayon_children) ) {
 
