@@ -50,7 +50,7 @@ function Circle(xc, yc, radius, hid) {
     else if(this.hid === "sibling")
       return "#F0F27F";
     else if(this.hid === "children")
-      return "#8D6290";
+      return "red";
     else if(this.hid === "current")
       return "#E4E540";
   };
@@ -73,7 +73,7 @@ function Circle(xc, yc, radius, hid) {
    * @return {int} The stroke width
    */
   this.getStrokeWidth = function() {
-      return 1;
+    return 1;
   };
 
   /**
@@ -313,7 +313,7 @@ $(document).ready(function() {
   // nb_children = parseInt($("#children").html());
 
   nb_parents = 3;
-  nb_siblings = 9;
+  nb_siblings = 102;
   nb_children = 9;
 
   var svg = new SVGClass($("#hierarchy"));
