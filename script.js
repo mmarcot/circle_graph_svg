@@ -177,7 +177,7 @@ function drawParents(svg, nb_parents) {
     parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2, "parent");
   }
 
-  for (var i = 0; i < nb_parents; i++) {
+  for (var i = 0; i < nb_parents && i < 5; i++) {
     parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart, "parent");
     parent.draw();
   }
