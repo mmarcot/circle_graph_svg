@@ -51,7 +51,7 @@ function drawParents(svg, nb_parents, ecart) {
   }
 
   // boucle de placage 1 à 1 :
-  for (var i = 0; i < nb_parents && i < 5; i++) {
+  for (var i = 0; i < nb_parents; i++) {
     parent = new Circle( svg.x_centre + i * ecart,
                          svg.y_centre + i * ecart,
                          svg.cote_min/2,
@@ -200,9 +200,11 @@ $(document).ready(function() {
   // nb_siblings = parseInt($("#siblings").html());
   // nb_children = parseInt($("#children").html());
 
-  nb_parents = 5;
-  nb_siblings = 102;
-  nb_children = 9;
+  nb_parents = 10;
+  if(nb_parents > 5)
+    nb_parents = 5;
+  nb_siblings = 10;
+  nb_children = 0;
 
   var ecart_entre_parents = 3;
 
