@@ -22,12 +22,12 @@ function isCollision(tab, x_random, y_random, rayon) {
 
 /**
  * Fonction qui déssine l'objet courant sous forme de cercle SVG
- * @param  {CanvasSVG} svg L'objet svg
+ * @param  {Circle} smaller_parent Le plus petit parent
  * @return {Circle}   Les dimensions du cercle représentant l'objet courant
  */
-function drawCurrentObject(svg) {
+function drawCurrentObject(smaller_parent) {
   var coef = 0.4;
-  var current_object = new Circle(svg.x_centre, svg.y_centre, (svg.cote_min/2)*coef, "current");
+  var current_object = new Circle(smaller_parent.xc, smaller_parent.yc, smaller_parent.radius*coef, "current");
 
   current_object.draw();
 
@@ -42,8 +42,7 @@ function drawCurrentObject(svg) {
  * @param  {int} nb_parents Le nombre de parent de l'objet courant
  * @return {Circle}   Le plus petit cercle des parents
  */
-function drawParents(svg, nb_parents) {
-  var ecart = 3;
+function drawParents(svg, nb_parents, ecart) {
   var parent;
 
   // cas particulier :
@@ -53,7 +52,11 @@ function drawParents(svg, nb_parents) {
 
   // boucle de placage 1 à 1 :
   for (var i = 0; i < nb_parents && i < 5; i++) {
-    parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2-i*ecart, "parent");
+    parent = new Circle( svg.x_centre + i * ecart,
+                         svg.y_centre + i * ecart,
+                         svg.cote_min/2,
+                         "parent" );
+
     parent.draw();
   }
 
@@ -165,13 +168,18 @@ function drawChildren(svg, nb_children, current_object) {
   var cpt_colli = 0;
 
   while(placer < nb_children && cpt_colli < 50) {
+    // on tire les coordonées au sort :
     var x_random = Math.random() * (current_object.radius*2) + current_object.xc-current_object.radius;
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
-    var rayon_children = 3 + scaleCircleSize(nb_children, "children");
-    rayon_children *= Math.min(svg.width, svg.height)/500;
 
+    // on calcul le rayon des children :
+    var rayon_children = 3 + scaleCircleSize(nb_children, "children");
+    rayon_children = rayon_children * Math.min(svg.width, svg.height)/500;
+
+    // si c'est contenu dans le current :
     if(current_object.contains(x_random, y_random, -rayon_children) ) {
 
+      // ..et pas de collision :
       if( !isCollision(tab_c, x_random, y_random, rayon_children) ) {
         var child = new Circle(x_random, y_random, rayon_children, "children");
         child.draw();
@@ -192,14 +200,26 @@ $(document).ready(function() {
   // nb_siblings = parseInt($("#siblings").html());
   // nb_children = parseInt($("#children").html());
 
-  nb_parents = 3;
+  nb_parents = 5;
   nb_siblings = 102;
   nb_children = 9;
 
-  var svg = new CanvasSVG($("#hierarchy"));
+  var ecart_entre_parents = 3;
 
-  var smaller_parent = drawParents(svg, nb_parents);
-  var current_object = drawCurrentObject(svg);
-  drawSiblings(svg, nb_siblings, smaller_parent, current_object);
-  drawChildren(svg, nb_children, current_object);
+  // on récupère les dimensions initiale du canvas :
+  var svg_width = parseInt($("#hierarchy").attr("width"));
+  var svg_height = parseInt($("#hierarchy").attr("height"));
+
+  var svg_depart = new CanvasSVG($("#hierarchy"));
+
+  // on agrandi le canvas pour caser tous les parents :
+  $("#hierarchy").attr("width", svg_width + nb_parents * ecart_entre_parents);
+  $("#hierarchy").attr("height", svg_height + nb_parents * ecart_entre_parents);
+
+  var svg_agrandi = new CanvasSVG($("#hierarchy"));
+
+  var smaller_parent = drawParents(svg_depart, nb_parents, ecart_entre_parents);
+  var current_object = drawCurrentObject(smaller_parent);
+  drawSiblings(svg_agrandi, nb_siblings, smaller_parent, current_object);
+  drawChildren(svg_agrandi, nb_children, current_object);
 });
