@@ -46,15 +46,13 @@ function Circle(xc, yc, radius, hid) {
    */
   this.getFillcolor = function() {
     if(this.hid === "parent")
-      return "#8EC3CC";
+      return "#078E9D";
     else if(this.hid === "sibling")
       return "black";
-      //return "#F0F27F";
     else if(this.hid === "children")
       return "red";
     else if(this.hid === "current")
       return "black";
-      // return "#E4E540";
   };
 
   /**
@@ -68,15 +66,17 @@ function Circle(xc, yc, radius, hid) {
    * @return {String} The stroke color
    */
   this.getStrokeColor = function() {
-
-    return "black";
+    if(this.hid === "current")
+      return "white";
+    else
+      return "black";
   };
 
   /**
    * @return {int} The stroke width
    */
   this.getStrokeWidth = function() {
-    if(this.hid === "children")
+    if(this.hid === "children" && nb_children > 70)
       return 0;
     else if(this.hid === "current")
       return 3;
@@ -320,9 +320,9 @@ $(document).ready(function() {
   // nb_siblings = parseInt($("#siblings").html());
   // nb_children = parseInt($("#children").html());
 
-  nb_parents = 2000;
-  nb_siblings = 8200;
-  nb_children = 9000;
+  nb_parents = 3;
+  nb_siblings = 9;
+  nb_children = 70;
 
   var svg = new SVGClass($("#hierarchy"));
 
