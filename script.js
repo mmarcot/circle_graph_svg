@@ -194,6 +194,24 @@ function drawChildren(svg, nb_children, current_object) {
 }
 
 
+/**
+ * Fonction qui permet de dessiner un texte sur le canvas
+ * @param  {int} x     L'abscisse du texte
+ * @param  {int} y     L'ordonnée du texte
+ * @param  {String} color La couleur du texte
+ * @param {String} texte La valeur du texte
+ */
+function drawText(x, y, color, texte) {
+  var shape = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  shape.setAttributeNS(null, "x", x);
+  shape.setAttributeNS(null, "y", y);
+  shape.setAttributeNS(null, "fill", color);
+  shape.textContent = texte;
+
+  document.getElementById('hierarchy').appendChild(shape);
+}
+
+
 
 $(document).ready(function() {
   // nb_parents = parseInt($("#parents").html());
@@ -204,7 +222,7 @@ $(document).ready(function() {
   if(nb_parents > 5)
     nb_parents = 5;
   nb_siblings = 10;
-  nb_children = 0;
+  nb_children = 9;
 
   var ecart_entre_parents = 3;
 
@@ -224,4 +242,8 @@ $(document).ready(function() {
   var current_object = drawCurrentObject(smaller_parent);
   drawSiblings(svg_agrandi, nb_siblings, smaller_parent, current_object);
   drawChildren(svg_agrandi, nb_children, current_object);
+
+  drawText(svg_agrandi.width*5/10, svg_agrandi.height*3.5/10, "white", "This");
+  drawText(svg_agrandi.width*6/10, svg_agrandi.height*2/10, "white", "Siblings");
+  drawText(svg_agrandi.width*0.5/10, svg_agrandi.height*1/10, "black", "Parents");
 });
