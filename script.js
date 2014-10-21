@@ -26,7 +26,7 @@ function isCollision(tab, x_random, y_random, rayon) {
  * @return {Circle}   Les dimensions du cercle représentant l'objet courant
  */
 function drawCurrentObject(smaller_parent) {
-  var coef = 0.4;
+  var coef = 0.6;
   var current_object = new Circle(smaller_parent.xc, smaller_parent.yc, smaller_parent.radius*coef, "current");
 
   current_object.draw();
@@ -42,20 +42,30 @@ function drawCurrentObject(smaller_parent) {
  * @param  {int} nb_parents Le nombre de parent de l'objet courant
  * @return {Circle}   Le plus petit cercle des parents
  */
-function drawParents(svg, nb_parents, ecart) {
-  var parent;
+function drawParents(svg, nb_parents) {
+  var parent=null;
+  var ecart = 5;
 
   // cas particulier :
   if(nb_parents === 0) {
     parent = new Circle(svg.x_centre, svg.y_centre, svg.cote_min/2, "parent");
   }
 
+  var last_xc = svg.x_centre;
+  var last_yc = svg.y_centre;
+  var last_r = svg.cote_min/2;
+
   // boucle de placage 1 à 1 :
   for (var i = 0; i < nb_parents; i++) {
-    parent = new Circle( svg.x_centre + i * ecart,
-                         svg.y_centre + i * ecart,
-                         svg.cote_min/2,
-                         "parent" );
+
+    parent = new Circle(last_xc, last_yc, last_r, "parent");
+
+    // on update :
+    last_xc -= ecart * (Math.random()*2-1);
+    last_yc -= ecart * (Math.random()*2-1);
+    last_r -= ecart;
+
+    // on dessine :
     var last_parent = ( i === nb_parents-1 );
     parent.draw(last_parent);
   }
@@ -221,13 +231,24 @@ function drawText(x, y, color, texte, fontsize) {
  */
 function setCircleHover() {
   // parent
-  $(".parent:not(.last_parent)").hover(function() {
-    $(".parent").css("stroke", "#EAEAEA");
-    $(this).css("cursor", "pointer");
-  },
-  function() {
-    $(".parent").css("stroke", "black");
-  });
+  if(nb_parents > 1) {
+    $(".parent:not(.last_parent)").hover(function() {
+      $(".parent").css("stroke", "#EAEAEA");
+      $(this).css("cursor", "pointer");
+    },
+    function() {
+      $(".parent").css("stroke", "black");
+    });
+  }
+  else {
+    $(".parent").hover(function() {
+      $(".parent").css("stroke", "#EAEAEA");
+      $(this).css("cursor", "pointer");
+    },
+    function() {
+      $(".parent").css("stroke", "black");
+    });
+  }
 
   // sibling :
   $(".sibling").hover(function() {
@@ -259,36 +280,23 @@ $(document).ready(function() {
   // nb_siblings = parseInt($("#siblings").html());
   // nb_children = parseInt($("#children").html());
 
-  nb_parents = 6;
+  nb_parents = 3;
   if(nb_parents > 5)
     nb_parents = 5;
   nb_siblings = 102;
-  nb_children = 9;
+  nb_children = 8000;
 
-  var ecart_entre_parents = 3;
+  var svg = new CanvasSVG($("#hierarchy"));
 
-  // on récupère les dimensions initiale du canvas :
-  var svg_width = parseInt($("#hierarchy").attr("width"));
-  var svg_height = parseInt($("#hierarchy").attr("height"));
-
-  var svg_depart = new CanvasSVG($("#hierarchy"));
-
-  // on agrandi le canvas pour caser tous les parents :
-  $("#hierarchy").attr("width", svg_width + nb_parents * ecart_entre_parents);
-  $("#hierarchy").attr("height", svg_height + nb_parents * ecart_entre_parents);
-
-  var svg_agrandi = new CanvasSVG($("#hierarchy"));
-
-  var smaller_parent = drawParents(svg_depart, nb_parents, ecart_entre_parents);
+  var smaller_parent = drawParents(svg, nb_parents);
   var current_object = drawCurrentObject(smaller_parent);
-  drawSiblings(svg_agrandi, nb_siblings, smaller_parent, current_object);
-  drawChildren(svg_agrandi, nb_children, current_object);
+  drawSiblings(svg, nb_siblings, smaller_parent, current_object);
+  drawChildren(svg, nb_children, current_object);
 
-  //drawText(svg_agrandi.width*5.2/10, svg_agrandi.height*4.5/10, "white", "This");
-  drawText(svg_agrandi.width*5.2/10, svg_agrandi.height*5.2/10, "white", "Children", "12px");
-  drawText(svg_agrandi.width*6.2/10, svg_agrandi.height*2.5/10, "white", "Siblings");
-  drawText(svg_agrandi.width*1.4/10, svg_agrandi.height*1/10, "black", "Parents");
-  //drawText(svg_agrandi.width*5/10, svg_agrandi.height*6/10, "white", "Children");
+  //drawText(svg.width*5.2/10, svg.height*4.5/10, "white", "This");
+  // drawText(current_object.xc, current_object.yc+5, "black", "Children");
+  // drawText(smaller_parent.xc, smaller_parent.yc-(svg.height/4.2), "black", "Siblings");
+  // drawText(svg.width*1.5/10, svg.height*1/10, "black", "Parents");
 
   setCircleHover();
 });

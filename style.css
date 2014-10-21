@@ -3,7 +3,7 @@ body {
 }
 
 svg {
-  background-color: white;
+  background-color: #A3F5CF;
 }
 
 text {
@@ -16,25 +16,26 @@ text {
   fill: #078E9D;
   stroke: black;
   stroke-width: 1;
+  opacity: 0.4;
 }
 
 
 .sibling {
-  fill: black;
+  fill: white;
   stroke: black;
   stroke-width: 0;
 }
 
 
 .current {
-  fill: black;
-  stroke: white;
-  stroke-width: 3;
+  fill: #078E9D;
+  stroke: black;
+  opacity: 1;
 }
 
 
 .children {
-  fill: red;
+  fill: white;
   stroke: black;
   stroke-width: 0;
 }

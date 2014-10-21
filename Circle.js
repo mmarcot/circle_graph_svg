@@ -49,8 +49,6 @@ function Circle(xc, yc, radius, hid) {
       return "http://www.google.fr";
     else if(this.hid === "children")
       return "http://www.google.fr";
-    else if(this.hid === "current")
-      return "http://www.google.fr";
   };
 
   /**
@@ -71,7 +69,7 @@ function Circle(xc, yc, radius, hid) {
       classe += " last_parent";
     shape.setAttributeNS(null, "class", classe); // classe CSS
 
-    if(!last_parent)
+    if(!last_parent && this.hid !== "parent")
       shape.setAttributeNS(null, "onclick", "location.href='" + this.getTargetUrl() + "'");
 
     shape.appendChild(title);
