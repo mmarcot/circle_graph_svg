@@ -56,8 +56,8 @@ function drawParents(svg, nb_parents, ecart) {
                          svg.y_centre + i * ecart,
                          svg.cote_min/2,
                          "parent" );
-
-    parent.draw();
+    var last_parent = ( i === nb_parents-1 );
+    parent.draw(last_parent);
   }
 
   return parent;
@@ -218,7 +218,7 @@ function drawText(x, y, color, texte) {
  */
 function setCircleHover() {
   // parent
-  $(".parent").hover(function() {
+  $(".parent:not(.last_parent)").hover(function() {
     $(".parent").css("stroke", "white");
   },
   function() {
@@ -284,5 +284,4 @@ $(document).ready(function() {
   //drawText(svg_agrandi.width*5/10, svg_agrandi.height*6/10, "white", "Children");
 
   setCircleHover();
-
 });

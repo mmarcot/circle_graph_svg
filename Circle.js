@@ -56,14 +56,21 @@ function Circle(xc, yc, radius, hid) {
   /**
    * Fonction qui permet de dessiner le cercle
    */
-  this.draw = function() {
+  this.draw = function(last_parent) {
+    last_parent = last_parent || false;
+
     var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
     title.textContent = this.getTooltipText();
     var shape = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     shape.setAttributeNS(null, "cx", this.xc);
     shape.setAttributeNS(null, "cy", this.yc);
     shape.setAttributeNS(null, "r", this.radius);
-    shape.setAttributeNS(null, "class", this.hid); // classe CSS
+
+    var classe = "" + this.hid;
+    if(last_parent)
+      classe += " last_parent";
+    shape.setAttributeNS(null, "class", classe); // classe CSS
+
     shape.setAttributeNS(null, "onclick", "location.href='" + this.getTargetUrl() + "'");
 
     shape.appendChild(title);
