@@ -212,6 +212,41 @@ function drawText(x, y, color, texte) {
 }
 
 
+/**
+ * Fonction qui execute le instructions JQuery pour mettre en forme le hover
+ * sur les cercles
+ */
+function setCircleHover() {
+  // parent
+  $(".parent").hover(function() {
+    $(".parent").css("stroke", "white");
+  },
+  function() {
+    $(".parent").css("stroke", "black");
+  });
+
+  // sibling :
+  $(".sibling").hover(function() {
+    $(".sibling").css("stroke-width", 1);
+    $(".sibling").css("stroke", "white");
+  },
+  function() {
+    $(".sibling").css("stroke-width", 0);
+    $(".sibling").css("stroke", "black");
+  });
+
+  // children :
+  $(".children").hover(function() {
+    $(".children").css("stroke-width", 1);
+    $(".children").css("stroke", "white");
+  },
+  function() {
+    $(".children").css("stroke-width", 0);
+    $(".children").css("stroke", "black");
+  });
+}
+
+
 
 $(document).ready(function() {
   // nb_parents = parseInt($("#parents").html());
@@ -247,4 +282,7 @@ $(document).ready(function() {
   drawText(svg_agrandi.width*6.2/10, svg_agrandi.height*2.5/10, "white", "Siblings");
   drawText(svg_agrandi.width*1.4/10, svg_agrandi.height*1/10, "black", "Parents");
   //drawText(svg_agrandi.width*5/10, svg_agrandi.height*6/10, "white", "Children");
+
+  setCircleHover();
+
 });
