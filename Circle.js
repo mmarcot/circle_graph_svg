@@ -30,11 +30,11 @@ function Circle(xc, yc, radius, hid) {
    */
   this.getTooltipText = function() {
     if(this.hid === "parent")
-      return "One of " + nb_parents + " parents";
+      return "" + nb_parents + " parents";
     else if(this.hid === "sibling")
-      return "One of " + nb_siblings + " siblings";
+      return "" + nb_siblings + " siblings";
     else if(this.hid === "children")
-      return "One of " + nb_children + " children";
+      return "" + nb_children + " children";
     else if(this.hid === "current")
       return "The current object";
   };

@@ -8,6 +8,7 @@ svg {
 
 text {
   text-anchor: middle;
+  font-weight: bold;
   /*font-size: 12px;*/
 }
 

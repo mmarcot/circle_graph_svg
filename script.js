@@ -78,7 +78,7 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
   var cpt_colli = 0;
 
   // boucle qui place les siblings 1 à 1 :
-  while(placer < nb_siblings && cpt_colli < 70) {
+  while(placer < nb_siblings && cpt_colli < 80) {
     var x_random = Math.random() * svg.width;
     var y_random = Math.random()* svg.height;
 
@@ -167,13 +167,13 @@ function drawChildren(svg, nb_children, current_object) {
   var placer = 0;
   var cpt_colli = 0;
 
-  while(placer < nb_children && cpt_colli < 50) {
+  while(placer < nb_children && cpt_colli < 70) {
     // on tire les coordonées au sort :
     var x_random = Math.random() * (current_object.radius*2) + current_object.xc-current_object.radius;
     var y_random = Math.random() * (current_object.radius*2) + current_object.yc-current_object.radius;
 
     // on calcul le rayon des children :
-    var rayon_children = 3 + scaleCircleSize(nb_children, "children");
+    var rayon_children = 4 + scaleCircleSize(nb_children, "children");
     rayon_children = rayon_children * Math.min(svg.width, svg.height)/500;
 
     // si c'est contenu dans le current :
@@ -201,11 +201,14 @@ function drawChildren(svg, nb_children, current_object) {
  * @param  {String} color La couleur du texte
  * @param {String} texte La valeur du texte
  */
-function drawText(x, y, color, texte) {
+function drawText(x, y, color, texte, fontsize) {
+  fontsize = fontsize || false;
   var shape = document.createElementNS("http://www.w3.org/2000/svg", "text");
   shape.setAttributeNS(null, "x", x);
   shape.setAttributeNS(null, "y", y);
   shape.setAttributeNS(null, "fill", color);
+  if(fontsize)
+    shape.setAttributeNS(null, "font-size", "" + fontsize);
   shape.textContent = texte;
 
   document.getElementById('hierarchy').appendChild(shape);
@@ -219,7 +222,8 @@ function drawText(x, y, color, texte) {
 function setCircleHover() {
   // parent
   $(".parent:not(.last_parent)").hover(function() {
-    $(".parent").css("stroke", "white");
+    $(".parent").css("stroke", "#EAEAEA");
+    $(this).css("cursor", "pointer");
   },
   function() {
     $(".parent").css("stroke", "black");
@@ -228,7 +232,8 @@ function setCircleHover() {
   // sibling :
   $(".sibling").hover(function() {
     $(".sibling").css("stroke-width", 1);
-    $(".sibling").css("stroke", "white");
+    $(".sibling").css("stroke", "#EAEAEA");
+    $(this).css("cursor", "pointer");
   },
   function() {
     $(".sibling").css("stroke-width", 0);
@@ -238,7 +243,8 @@ function setCircleHover() {
   // children :
   $(".children").hover(function() {
     $(".children").css("stroke-width", 1);
-    $(".children").css("stroke", "white");
+    $(".children").css("stroke", "#EAEAEA");
+    $(this).css("cursor", "pointer");
   },
   function() {
     $(".children").css("stroke-width", 0);
@@ -253,10 +259,10 @@ $(document).ready(function() {
   // nb_siblings = parseInt($("#siblings").html());
   // nb_children = parseInt($("#children").html());
 
-  nb_parents = 10;
+  nb_parents = 6;
   if(nb_parents > 5)
     nb_parents = 5;
-  nb_siblings = 10;
+  nb_siblings = 102;
   nb_children = 9;
 
   var ecart_entre_parents = 3;
@@ -278,7 +284,8 @@ $(document).ready(function() {
   drawSiblings(svg_agrandi, nb_siblings, smaller_parent, current_object);
   drawChildren(svg_agrandi, nb_children, current_object);
 
-  drawText(svg_agrandi.width*5.2/10, svg_agrandi.height*4.5/10, "white", "This");
+  //drawText(svg_agrandi.width*5.2/10, svg_agrandi.height*4.5/10, "white", "This");
+  drawText(svg_agrandi.width*5.2/10, svg_agrandi.height*5.2/10, "white", "Children", "12px");
   drawText(svg_agrandi.width*6.2/10, svg_agrandi.height*2.5/10, "white", "Siblings");
   drawText(svg_agrandi.width*1.4/10, svg_agrandi.height*1/10, "black", "Parents");
   //drawText(svg_agrandi.width*5/10, svg_agrandi.height*6/10, "white", "Children");
