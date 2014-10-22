@@ -27,7 +27,10 @@ function isCollision(tab, x_random, y_random, rayon) {
  */
 function drawCurrentObject(smaller_parent) {
   var coef = 0.6;
-  var current_object = new Circle(smaller_parent.xc, smaller_parent.yc, smaller_parent.radius*coef, "current");
+  var x_rand = Math.random()*30 - 15;
+  var y_rand = Math.random()*30 - 15;
+
+  var current_object = new Circle(smaller_parent.xc+x_rand, smaller_parent.yc+y_rand, smaller_parent.radius*coef, "current");
 
   current_object.draw();
 
