@@ -29,6 +29,7 @@ function drawCurrentObject(smaller_parent) {
   var coef = 0.6;
   var x_rand = Math.random()*30 - 15;
   var y_rand = Math.random()*30 - 15;
+  if(y_rand<-6.5) y_rand = -6.5;
 
   var current_object = new Circle(smaller_parent.xc+x_rand, smaller_parent.yc+y_rand, smaller_parent.radius*coef, "current");
 
@@ -47,7 +48,7 @@ function drawCurrentObject(smaller_parent) {
  */
 function drawParents(svg, nb_parents) {
   var parent=null;
-  var ecart = 5;
+  var ecart = 3;
 
   // cas particulier :
   if(nb_parents === 0) {
@@ -128,7 +129,7 @@ function drawSiblings(svg, nb_siblings, smaller_parent, current_object) {
  */
 function scaleCircleSize(nb, hid) {
   var size;
-  var size_max_siblings = 35;
+  var size_max_siblings = 25;
   var size_max_children = 15;
 
   if(hid === "sibling") {
@@ -277,17 +278,16 @@ function setCircleHover() {
 }
 
 
-
 $(document).ready(function() {
   // nb_parents = parseInt($("#parents").html());
   // nb_siblings = parseInt($("#siblings").html());
   // nb_children = parseInt($("#children").html());
 
-  nb_parents = 3;
+  nb_parents = 5;
   if(nb_parents > 5)
     nb_parents = 5;
-  nb_siblings = 102;
-  nb_children = 8000;
+  nb_siblings = 9;
+  nb_children = 9;
 
   var svg = new CanvasSVG($("#hierarchy"));
 
@@ -296,10 +296,12 @@ $(document).ready(function() {
   drawSiblings(svg, nb_siblings, smaller_parent, current_object);
   drawChildren(svg, nb_children, current_object);
 
-  //drawText(svg.width*5.2/10, svg.height*4.5/10, "white", "This");
-  // drawText(current_object.xc, current_object.yc+5, "black", "Children");
-  // drawText(smaller_parent.xc, smaller_parent.yc-(svg.height/4.2), "black", "Siblings");
-  // drawText(svg.width*1.5/10, svg.height*1/10, "black", "Parents");
+  if(nb_children > 0)
+    drawText(current_object.xc, current_object.yc+5, "black", "Children");
+  if(nb_siblings > 0)
+    drawText(smaller_parent.xc, smaller_parent.yc-smaller_parent.radius+20, "black", "Siblings");
+  if(nb_parents > 0)
+    drawText(svg.width*1.5/10, svg.height*1/10, "black", "Parents");
 
   setCircleHover();
 });

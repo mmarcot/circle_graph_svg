@@ -51,6 +51,7 @@ function Circle(xc, yc, radius, hid) {
       return "http://www.google.fr";
   };
 
+
   /**
    * Fonction qui permet de dessiner le cercle
    */
