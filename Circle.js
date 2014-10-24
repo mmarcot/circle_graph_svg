@@ -70,7 +70,7 @@ function Circle(xc, yc, radius, hid) {
       classe += " last_parent";
     shape.setAttributeNS(null, "class", classe); // classe CSS
 
-    if(!last_parent && this.hid !== "parent")
+    if(!last_parent)
       shape.setAttributeNS(null, "onclick", "location.href='" + this.getTargetUrl() + "'");
 
     shape.appendChild(title);
